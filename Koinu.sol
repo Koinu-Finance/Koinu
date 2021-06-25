@@ -19,6 +19,8 @@
      KKKKKKKKK    KKKKKKK     OOOOOOOOO     IIIIIIIIIINNNNNNNN         NNNNNNN      UUUUUUUUU           
 
   
+    Because Puppies!
+    
     KOINU $KOINU
     小犬 (こいぬ)
     
@@ -26,6 +28,8 @@
     AntiWhale
     AntiDump
     Updateable Router
+    
+    Japanese for Puppy, KOINU is a hyper-deflationary, automatic yielding social token.
     
     TOKENOMICS 
     
@@ -113,6 +117,221 @@ interface IBEP20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
+
+// pragma solidity >=0.5.0;
+
+interface IPancakeFactory {
+    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+
+    function feeTo() external view returns (address);
+    function feeToSetter() external view returns (address);
+
+    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    function allPairs(uint) external view returns (address pair);
+    function allPairsLength() external view returns (uint);
+
+    function createPair(address tokenA, address tokenB) external returns (address pair);
+
+    function setFeeTo(address) external;
+    function setFeeToSetter(address) external;
+    
+    function INIT_CODE_PAIR_HASH() external view returns (bytes32);
+}
+
+
+// pragma solidity >=0.5.0;
+
+interface IPancakePair {
+    event Approval(address indexed owner, address indexed spender, uint value);
+    event Transfer(address indexed from, address indexed to, uint value);
+
+    function name() external pure returns (string memory);
+    function symbol() external pure returns (string memory);
+    function decimals() external pure returns (uint8);
+    function totalSupply() external view returns (uint);
+    function balanceOf(address owner) external view returns (uint);
+    function allowance(address owner, address spender) external view returns (uint);
+
+    function approve(address spender, uint value) external returns (bool);
+    function transfer(address to, uint value) external returns (bool);
+    function transferFrom(address from, address to, uint value) external returns (bool);
+
+    function DOMAIN_SEPARATOR() external view returns (bytes32);
+    function PERMIT_TYPEHASH() external pure returns (bytes32);
+    function nonces(address owner) external view returns (uint);
+
+    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
+
+    event Mint(address indexed sender, uint amount0, uint amount1);
+    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
+    event Swap(
+        address indexed sender,
+        uint amount0In,
+        uint amount1In,
+        uint amount0Out,
+        uint amount1Out,
+        address indexed to
+    );
+    event Sync(uint112 reserve0, uint112 reserve1);
+
+    function MINIMUM_LIQUIDITY() external pure returns (uint);
+    function factory() external view returns (address);
+    function token0() external view returns (address);
+    function token1() external view returns (address);
+    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+    function price0CumulativeLast() external view returns (uint);
+    function price1CumulativeLast() external view returns (uint);
+    function kLast() external view returns (uint);
+
+    function mint(address to) external returns (uint liquidity);
+    function burn(address to) external returns (uint amount0, uint amount1);
+    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+    function skim(address to) external;
+    function sync() external;
+
+    function initialize(address, address) external;
+}
+
+
+// pragma solidity >=0.6.2;
+
+interface IPancakeRouter01 {
+    function factory() external pure returns (address);
+    function WETH() external pure returns (address);
+
+    function addLiquidity(
+        address tokenA,
+        address tokenB,
+        uint amountADesired,
+        uint amountBDesired,
+        uint amountAMin,
+        uint amountBMin,
+        address to,
+        uint deadline
+    ) external returns (uint amountA, uint amountB, uint liquidity);
+    function addLiquidityBNB(
+        address token,
+        uint amountTokenDesired,
+        uint amountTokenMin,
+        uint amountETHMin,
+        address to,
+        uint deadline
+    ) external payable returns (uint amountToken, uint amountBNB, uint liquidity);
+    function removeLiquidity(
+        address tokenA,
+        address tokenB,
+        uint liquidity,
+        uint amountAMin,
+        uint amountBMin,
+        address to,
+        uint deadline
+    ) external returns (uint amountA, uint amountB);
+    function removeLiquidityBNB(
+        address token,
+        uint liquidity,
+        uint amountTokenMin,
+        uint amountBNBMin,
+        address to,
+        uint deadline
+    ) external returns (uint amountToken, uint amountBNB);
+    function removeLiquidityWithPermit(
+        address tokenA,
+        address tokenB,
+        uint liquidity,
+        uint amountAMin,
+        uint amountBMin,
+        address to,
+        uint deadline,
+        bool approveMax, uint8 v, bytes32 r, bytes32 s
+    ) external returns (uint amountA, uint amountB);
+    function removeLiquidityBNBWithPermit(
+        address token,
+        uint liquidity,
+        uint amountTokenMin,
+        uint amountBNBMin,
+        address to,
+        uint deadline,
+        bool approveMax, uint8 v, bytes32 r, bytes32 s
+    ) external returns (uint amountToken, uint amountBNB);
+    function swapExactTokensForTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external returns (uint[] memory amounts);
+    function swapTokensForExactTokens(
+        uint amountOut,
+        uint amountInMax,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external returns (uint[] memory amounts);
+    function swapExactBNBForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)
+        external
+        payable
+        returns (uint[] memory amounts);
+    function swapTokensForExactBNB(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
+        external
+        returns (uint[] memory amounts);
+    function swapExactTokensForBNB(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
+        external
+        returns (uint[] memory amounts);
+    function swapBNBForExactTokens(uint amountOut, address[] calldata path, address to, uint deadline)
+        external
+        payable
+        returns (uint[] memory amounts);
+
+    function quote(uint amountA, uint reserveA, uint reserveB) external pure returns (uint amountB);
+    function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
+    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) external pure returns (uint amountIn);
+    function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
+    function getAmountsIn(uint amountOut, address[] calldata path) external view returns (uint[] memory amounts);
+}
+
+
+// pragma solidity >=0.6.2;
+
+interface IPancakeRouter02 is IPancakeRouter01 {
+    function removeLiquidityBNBSupportingFeeOnTransferTokens(
+        address token,
+        uint liquidity,
+        uint amountTokenMin,
+        uint amountBNBMin,
+        address to,
+        uint deadline
+    ) external returns (uint amountBNB);
+    function removeLiquidityBNBWithPermitSupportingFeeOnTransferTokens(
+        address token,
+        uint liquidity,
+        uint amountTokenMin,
+        uint amountBNBMin,
+        address to,
+        uint deadline,
+        bool approveMax, uint8 v, bytes32 r, bytes32 s
+    ) external returns (uint amountBNB);
+
+    function swapExactTokensForTokensSupportingFeeOnTransferTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external;
+    function swapExactBNBForTokensSupportingFeeOnTransferTokens(
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external payable;
+    function swapExactTokensForBNBSupportingFeeOnTransferTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external;
+}
 
 /**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow
@@ -271,18 +490,6 @@ library SafeMath {
 }
 
 
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address payable) {
-        return msg.sender;
-    }
-
-    function _msgData() internal view virtual returns (bytes memory) {
-        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
-        return msg.data;
-    }
-}
-
-
 /**
  * @dev Collection of functions related to the address type
  */
@@ -422,6 +629,18 @@ library Address {
 }
 
 
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address payable) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes memory) {
+        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+        return msg.data;
+    }
+}
+
+
 /**
  * @dev Contract module which provides a basic access control mechanism, where
  * there is an account (an owner) that can be granted exclusive access to
@@ -509,222 +728,6 @@ contract Ownable is Context {
 }
 
 
-// pragma solidity >=0.5.0;
-
-interface IPancakeFactory {
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
-
-    function feeTo() external view returns (address);
-    function feeToSetter() external view returns (address);
-
-    function getPair(address tokenA, address tokenB) external view returns (address pair);
-    function allPairs(uint) external view returns (address pair);
-    function allPairsLength() external view returns (uint);
-
-    function createPair(address tokenA, address tokenB) external returns (address pair);
-
-    function setFeeTo(address) external;
-    function setFeeToSetter(address) external;
-    
-    function INIT_CODE_PAIR_HASH() external view returns (bytes32);
-}
-
-
-// pragma solidity >=0.5.0;
-
-interface IPancakePair {
-    event Approval(address indexed owner, address indexed spender, uint value);
-    event Transfer(address indexed from, address indexed to, uint value);
-
-    function name() external pure returns (string memory);
-    function symbol() external pure returns (string memory);
-    function decimals() external pure returns (uint8);
-    function totalSupply() external view returns (uint);
-    function balanceOf(address owner) external view returns (uint);
-    function allowance(address owner, address spender) external view returns (uint);
-
-    function approve(address spender, uint value) external returns (bool);
-    function transfer(address to, uint value) external returns (bool);
-    function transferFrom(address from, address to, uint value) external returns (bool);
-
-    function DOMAIN_SEPARATOR() external view returns (bytes32);
-    function PERMIT_TYPEHASH() external pure returns (bytes32);
-    function nonces(address owner) external view returns (uint);
-
-    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
-
-    event Mint(address indexed sender, uint amount0, uint amount1);
-    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
-    event Swap(
-        address indexed sender,
-        uint amount0In,
-        uint amount1In,
-        uint amount0Out,
-        uint amount1Out,
-        address indexed to
-    );
-    event Sync(uint112 reserve0, uint112 reserve1);
-
-    function MINIMUM_LIQUIDITY() external pure returns (uint);
-    function factory() external view returns (address);
-    function token0() external view returns (address);
-    function token1() external view returns (address);
-    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
-    function price0CumulativeLast() external view returns (uint);
-    function price1CumulativeLast() external view returns (uint);
-    function kLast() external view returns (uint);
-
-    function mint(address to) external returns (uint liquidity);
-    function burn(address to) external returns (uint amount0, uint amount1);
-    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
-    function skim(address to) external;
-    function sync() external;
-
-    function initialize(address, address) external;
-}
-
-
-// pragma solidity >=0.6.2;
-
-interface IPancakeRouter01 {
-    function factory() external pure returns (address);
-    function WETH() external pure returns (address);
-
-    function addLiquidity(
-        address tokenA,
-        address tokenB,
-        uint amountADesired,
-        uint amountBDesired,
-        uint amountAMin,
-        uint amountBMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountA, uint amountB, uint liquidity);
-    function addLiquidityETH(
-        address token,
-        uint amountTokenDesired,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
-    function removeLiquidity(
-        address tokenA,
-        address tokenB,
-        uint liquidity,
-        uint amountAMin,
-        uint amountBMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountA, uint amountB);
-    function removeLiquidityETH(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountToken, uint amountETH);
-    function removeLiquidityWithPermit(
-        address tokenA,
-        address tokenB,
-        uint liquidity,
-        uint amountAMin,
-        uint amountBMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external returns (uint amountA, uint amountB);
-    function removeLiquidityETHWithPermit(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external returns (uint amountToken, uint amountETH);
-    function swapExactTokensForTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external returns (uint[] memory amounts);
-    function swapTokensForExactTokens(
-        uint amountOut,
-        uint amountInMax,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external returns (uint[] memory amounts);
-    function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)
-        external
-        payable
-        returns (uint[] memory amounts);
-    function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
-        external
-        returns (uint[] memory amounts);
-    function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
-        external
-        returns (uint[] memory amounts);
-    function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, uint deadline)
-        external
-        payable
-        returns (uint[] memory amounts);
-
-    function quote(uint amountA, uint reserveA, uint reserveB) external pure returns (uint amountB);
-    function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
-    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) external pure returns (uint amountIn);
-    function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
-    function getAmountsIn(uint amountOut, address[] calldata path) external view returns (uint[] memory amounts);
-}
-
-
-// pragma solidity >=0.6.2;
-
-interface IPancakeRouter02 is IPancakeRouter01 {
-    function removeLiquidityETHSupportingFeeOnTransferTokens(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountETH);
-    function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external returns (uint amountETH);
-
-    function swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external;
-    function swapExactETHForTokensSupportingFeeOnTransferTokens(
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external payable;
-    function swapExactTokensForETHSupportingFeeOnTransferTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external;
-}
-
-
 contract Koinu is Context, IBEP20, Ownable {
     using SafeMath for uint256;
     using Address for address;
@@ -734,12 +737,12 @@ contract Koinu is Context, IBEP20, Ownable {
     mapping (address => mapping (address => uint256)) private _allowances;
     mapping (address => bool) private _isExcludedFromFee;
     mapping (address => bool) private _isExcluded;
-
+    
     ///@dev The swap router, modifiable. Will be changed to KOINU's router when our AMM is released
     IPancakeRouter02 public koinuRouter;
     address public liquidityPair;
-    address private _marketingAddress;
-    address private _charityAddress;
+    address payable _marketingAddress;
+    address payable _charityAddress;
     address private _burnAddress;
     address[] private _excluded;
     bool private isSwapAndLiquify;
@@ -751,12 +754,13 @@ contract Koinu is Context, IBEP20, Ownable {
     uint8 private constant DECIMALS = 9;
     uint256 private constant MAX = ~uint256(0);
     uint256 private constant TOTAL = 1000000000 * 10**6 * 10**9;
-    uint256 private constant LIQUIDITY_TOKENS = 500000 * 10**6 * 10**9;
+    uint256 private constant LIQUIDITY_TOKENS = 400000000 * 10**6 * 10**9;
     uint256 public _rewardFee = 3;
     uint256 public _liquidityFee = 4;
     uint256 public _marketingFee = 1;
     uint256 public _charityFee = 1;
     uint256 public _maxSellAmount = 5; // sell amount divided by this amount (5 = 20%)
+    //anti-whale mechanism
     uint256 public _maxTxAmount = 5000000 * 10**6 * 10**9;
     bool public swapAndLiquifyEnabled = true;
     bool public tradingEnabled = false;
@@ -774,6 +778,12 @@ contract Koinu is Context, IBEP20, Ownable {
     event ExcludeFromReward(address indexed owner, address indexed account);
     event IncludeInReward(address indexed owner, address indexed account);
     event AntiDumpDivisorUpdated(address indexed owner, uint256 divisor);
+    event CharityAddressUpdated(address indexed owner, address indexed CharityAddress);
+    event MarketingAddressUpdated(address indexed owner, address indexed MarketingAddress);
+    event RewardFeeUpdated(address indexed owner, uint256 rewardFee);
+    event LiquidityFeeUpdated(address indexed owner, uint256 liquidityFee);
+    event MarketingFeeUpdated(address indexed owner, uint256 marketingFee);
+    event CharityFeeUpdated(address indexed owner, uint256 charityFee);
     event TradingEnabled(address indexed owner, bool tradingEnabled);
     event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
     event AntiDump(bool setting);
@@ -784,7 +794,7 @@ contract Koinu is Context, IBEP20, Ownable {
         uint256 tokensIntoLiquidity
     );
 
-    constructor (address CharityAddress, address MarketingAddress, address BurnAddress, IPancakeRouter02 KoinuRouter) public {
+    constructor (address payable CharityAddress, address payable MarketingAddress, address BurnAddress, IPancakeRouter02 KoinuRouter) public {
         _rOwned[_msgSender()] = _rTotal;
         // PancakeSwap Router address: (BSC testnet) 0xD99D1c33F9fC3444f8101754aBC46c52416550D1  (BSC mainnet) V2 0x10ED43C718714eb63d5aA57B78B54704E256024E
         liquidityPair = IPancakeFactory(KoinuRouter.factory())
@@ -854,30 +864,36 @@ contract Koinu is Context, IBEP20, Ownable {
         }
     }
     
-    function setCharityAddress(address CharityAddress) external onlyOwner()  {
+    function setCharityAddress(address payable CharityAddress) external onlyOwner()  {
         require(!_isExcluded[CharityAddress], "Can't be excluded address");
         _charityAddress = CharityAddress;
+        emit CharityAddressUpdated(msg.sender, CharityAddress);
     }
     
-    function setMarketingAddress(address MarketingAddress) external onlyOwner()  {
+    function setMarketingAddress(address payable MarketingAddress) external onlyOwner()  {
         require(!_isExcluded[MarketingAddress], "Can't be excluded address");
         _marketingAddress = MarketingAddress;
+        emit MarketingAddressUpdated(msg.sender, MarketingAddress);
     }
 
     function setRewardFeePercent(uint256 rewardFee) external onlyOwner() {
         _rewardFee = rewardFee;
+        emit RewardFeeUpdated(msg.sender, rewardFee);
     }
     
     function setLiquidityFeePercent(uint256 liquidityFee) external onlyOwner() {
         _liquidityFee = liquidityFee;
+        emit LiquidityFeeUpdated(msg.sender, liquidityFee);
     }
 
     function setMarketingFeePercent(uint256 marketingFee) external onlyOwner() {
         _marketingFee = marketingFee;
+        emit MarketingFeeUpdated(msg.sender, marketingFee);
     }
     
     function setCharityFeePercent(uint256 charityFee) external onlyOwner() {
         _charityFee = charityFee;
+        emit CharityFeeUpdated(msg.sender, charityFee);
     }
 
     function setMaxTxPercent(uint256 maxTxPercent) external onlyOwner() {
@@ -1275,7 +1291,7 @@ contract Koinu is Context, IBEP20, Ownable {
         _approve(address(this), address(koinuRouter), tokenAmount);
 
         // make the swap
-        koinuRouter.swapExactTokensForETHSupportingFeeOnTransferTokens(
+        koinuRouter.swapExactTokensForBNBSupportingFeeOnTransferTokens(
             tokenAmount,
             0, // accept any amount of BNB
             path,
@@ -1289,7 +1305,7 @@ contract Koinu is Context, IBEP20, Ownable {
         _approve(address(this), address(koinuRouter), tokenAmount);
 
         // add the liquidity
-        koinuRouter.addLiquidityETH{value: bnbAmount}(
+        koinuRouter.addLiquidityBNB{value: bnbAmount}(
             address(this),
             tokenAmount,
             0, // slippage is unavoidable
